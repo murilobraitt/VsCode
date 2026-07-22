@@ -1,0 +1,140 @@
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #8A51FC;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo {
+    width: 100%;
+    max-width: 350px;
+    display: block;
+    margin: 0 auto 25px auto;
+}
+
+main {
+   width: 100%;
+   max-width: 375px;
+   background: #F4F4F4;
+   border-radius: 20px;
+   padding: 25px;
+   display: flex;
+   flex-direction: column;
+   box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+label {
+    color: #777777;
+    font-weight: 400;
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+select, input {
+    background: #FFFFFF;
+    border: 1px solid #BBBBBB;
+    border-radius: 4px;
+    height: 44px;
+    width: 100%;
+    margin-bottom: 20px;
+    appearance: none;
+    padding-left: 14px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #555555;
+    cursor: pointer;
+    outline: none;
+}
+
+select:focus, input:focus {
+    border-color: #772FD3;
+}
+
+button {
+   background: #772FD3; 
+   border-radius: 5px;
+   width: 100%;
+   border: none;
+   height: 44px;
+   color: #FFFFFF;
+   font-size: 15px;
+   font-weight: 600;
+   cursor: pointer;
+   transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #6121b3;
+}
+
+button:active {
+    background-color: #4c188f;
+} 
+
+section {
+    border: 1px solid #772FD3;
+    border-radius: 20px;
+    margin-top: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.resultado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.imagem-de, .imagem {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.convertido-name, .converter-name {
+    font-size: 14px;
+    color: #777777;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.valor-converter, .valor-convertido {
+    font-size: 22px;
+    font-weight: bold;
+    color: #555555;
+    text-align: center;
+    margin-top: 2px;
+    width: 100%;
+}
+
+.valor-convertido {
+    color: #16a34a;
+}
+
+.arrow-img {
+    width: 35px;
+    height: 30px;
+    opacity: 0.5;
+    margin: 10px auto;
+    display: block;
+}
