@@ -131,10 +131,10 @@ section {
     color: #16a34a;
 }
 
-.arrow-img {
-    width: 35px;
-    height: 30px;
+.invert-button {
+    width: 55px;
+    height: 35px;
     opacity: 0.5;
     margin: 10px auto;
-    display: block;
+    
 }

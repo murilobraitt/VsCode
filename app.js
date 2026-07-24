@@ -19,20 +19,15 @@ const updateExchangeRates = async () => {
   try {
     const response = await fetch("https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,CNY-BRL,GBP-BRL,JPY-BRL");
     const data = await response.json();
-    const dolarAntigo = currencies.dolar.valorMoeda;
-    currencies.dolar.valorMoeda = Number(data.USDBRL.high);
-    currencies.euro.valorMoeda = Number(data.EURBRL.high);
-    currencies.bitcoin.valorMoeda = Number(data.BTCBRL.high);
-    currencies.yuan.valorMoeda = Number(data.CNYBRL.high);
-    currencies.libra.valorMoeda = Number(data.GBPBRL.high);
-    currencies.iene.valorMoeda = Number(data.JPYBRL.high);
-    console.log("=== PREÇOS ATUALIZADOS DO MERCADO ===");
-    console.log(`💵 Dólar: R$ ${currencies.dolar.valorMoeda}`);
-    console.log(`💶 Euro: R$ ${currencies.euro.valorMoeda}`);
-    console.log(`₿ Bitcoin: R$ ${currencies.bitcoin.valorMoeda}`);
-    console.log(`🇨🇳 Yuan: R$ ${currencies.yuan.valorMoeda}`);
-    console.log(`🇬🇧 Libra: R$ ${currencies.libra.valorMoeda}`);
-    console.log(`🇯🇵 Iene: R$ ${currencies.iene.valorMoeda}`);
+
+    currencies.dolar.valorMoeda = Number(data.USDBRL.bid);
+    currencies.euro.valorMoeda = Number(data.EURBRL.bid);
+    currencies.bitcoin.valorMoeda = Number(data.BTCBRL.bid);
+    currencies.yuan.valorMoeda = Number(data.CNYBRL.bid);
+    currencies.libra.valorMoeda = Number(data.GBPBRL.bid);
+    currencies.iene.valorMoeda = Number(data.JPYBRL.bid);
+
+    console.log(`[${new Date().toLocaleTimeString()}] Preços atualizados via API de mercado.`);
   } catch (error) {
     console.error('Erro ao buscar as taxas de câmbio:', error);
   }
@@ -46,7 +41,7 @@ app.get('/converter', async (req, res) => {
   if (isNaN(inputConvertorValue) || inputConvertorValue <= 0) {
     return res.status(400).json({ erro: 'Por favor, insira um valor válido.' });
   }
-
+  
   if (currencies.dolar.valorMoeda === 0) {
     await updateExchangeRates();
   }
@@ -80,8 +75,6 @@ app.get('/converter', async (req, res) => {
   const valorConvertidoFormatado = new Intl.NumberFormat(toCurrency.locale, formatoOpcoes).format(finalValue);
 
   res.json({
-    de: fromCurrency.name,
-    para: toCurrency.name,
     valorOriginal: valorOriginalFormatado,
     resultado: valorConvertidoFormatado
   });
