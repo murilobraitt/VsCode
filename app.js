@@ -52,12 +52,7 @@ app.get('/converter', async (req, res) => {
   if (!fromCurrency || !toCurrency) {
     return res.status(400).json({ erro: 'Moeda de origem ou destino inválida.' });
   }
-
-  // TRAVA DE SEGURANÇA: Se a API falhou e a moeda ainda está 0, evita exibir o símbolo de infinito ($∞)
-  if (toCurrency.currency !== 'BRL' && toCurrency.valorMoeda === 0) {
-    return res.status(503).json({ erro: 'As cotações estão sendo carregadas. Tente novamente em 2 segundos.' });
-  }
-
+  
   const valueInReal = fromCurrency.currency === 'BRL' 
     ? inputConvertorValue 
     : inputConvertorValue * fromCurrency.valorMoeda;
