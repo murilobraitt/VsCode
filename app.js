@@ -17,7 +17,7 @@ const currencies = {
 
 const updateExchangeRates = async () => {
   try {
-    const response = await fetch("https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,CNY-BRL,GBP-BRL,JPY-BRL");
+    const response = await fetch(" https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,CNY-BRL,GBP-BRL,JPY-BRL");
     const data = await response.json();
 
     currencies.dolar.valorMoeda = Number(data.USDBRL.bid);
