@@ -26,7 +26,7 @@ const updateExchangeRates = async () => {
     currencies.yuan.valorMoeda = Number(data.CNYBRL.bid);
     currencies.libra.valorMoeda = Number(data.GBPBRL.bid);
     currencies.iene.valorMoeda = Number(data.JPYBRL.bid);
-    
+
     console.log(`[${new Date().toLocaleTimeString()}] Preços atualizados via API de mercado.`);
   } catch (error) {
     console.error('Erro ao buscar as taxas de câmbio:', error);
@@ -51,6 +51,11 @@ app.get('/converter', async (req, res) => {
 
   if (!fromCurrency || !toCurrency) {
     return res.status(400).json({ erro: 'Moeda de origem ou destino inválida.' });
+  }
+
+  // TRAVA DE SEGURANÇA: Se a API falhou e a moeda ainda está 0, evita exibir o símbolo de infinito ($∞)
+  if (toCurrency.currency !== 'BRL' && toCurrency.valorMoeda === 0) {
+    return res.status(503).json({ erro: 'As cotações estão sendo carregadas. Tente novamente em 2 segundos.' });
   }
 
   const valueInReal = fromCurrency.currency === 'BRL' 
@@ -79,6 +84,8 @@ app.get('/converter', async (req, res) => {
     resultado: valorConvertidoFormatado
   });
 });
+updateExchangeRates(); // Atualiza as taxas de câmbio ao iniciar o servidor
+
 setInterval(updateExchangeRates, 60000);
 
 app.listen(porta, () => {
