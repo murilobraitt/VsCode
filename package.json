@@ -1,6 +1,14 @@
 {
+  "name": "conversor-de-moedas",
+  "version": "1.0.0",
+  "description": "Conversor de moedas reativo com Node.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "dev": "nodemon app.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "express": "^5.2.1"
