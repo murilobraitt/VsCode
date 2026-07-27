@@ -1,4 +1,4 @@
- * {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -6,135 +6,139 @@
 }
 
 body {
-    background-color: #8A51FC;
-    min-height: 100vh;
+    background-color: #0f172a; /* Azul escuro de fundo */
+    color: #f8fafc; /* Texto claro */
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    min-height: 100vh;
 }
 
-.logo {
-    width: 100%;
-    max-width: 350px;
-    display: block;
-    margin: 0 auto 25px auto;
-}
-
+/* Caixa Principal do Conversor */
 main {
-   width: 100%;
-   max-width: 375px;
-   background: #F4F4F4;
-   border-radius: 20px;
-   padding: 25px;
-   display: flex;
-   flex-direction: column;
-   box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-label {
-    color: #777777;
-    font-weight: 400;
-    font-size: 15px;
+    background-color: #1e293b; /* Fundo do card */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 450px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-bottom: 5px;
+    gap: 20px;
+}
+
+/* Estilização dos Campos (Inputs e Selects) */
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+label b {
+    color: #38bdf8; /* Destaca o "de" e "para" em azul claro */
 }
 
 select, input {
-    background: #FFFFFF;
-    border: 1px solid #BBBBBB;
-    border-radius: 4px;
-    height: 44px;
-    width: 100%;
-    margin-bottom: 20px;
-    appearance: none;
-    padding-left: 14px;
-    font-weight: 500;
-    font-size: 14px;
-    color: #555555;
-    cursor: pointer;
+    background-color: #334155;
+    border: 1px solid #475569;
+    color: #f8fafc;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
     outline: none;
+    transition: border-color 0.2s;
 }
 
 select:focus, input:focus {
-    border-color: #772FD3;
+    border-color: #38bdf8; /* Borda brilha ao clicar */
 }
 
-button {
-   background: #772FD3; 
-   border-radius: 5px;
-   width: 100%;
-   border: none;
-   height: 44px;
-   color: #FFFFFF;
-   font-size: 15px;
-   font-weight: 600;
-   cursor: pointer;
-   transition: background-color 0.2s;
+/* Botão Principal de Converter */
+.convert-button {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.2s;
 }
 
-button:hover {
-    background-color: #6121b3;
+.convert-button:hover {
+    background: linear-gradient(135deg, #0369a1, #075985);
 }
 
-button:active {
-    background-color: #4c188f;
-} 
+.convert-button:active {
+    transform: scale(0.98); /* Efeito de clique afundando */
+}
 
+/* Seção de Exibição dos Resultados */
 section {
-    border: 1px solid #772FD3;
-    border-radius: 20px;
-    margin-top: 20px;
+    background-color: #0f172a;
     padding: 20px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    gap: 15px;
+    margin-top: 10px;
 }
 
 .resultado {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    gap: 5px;
     width: 100%;
 }
 
-.imagem-de, .imagem {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 50%;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+/* Imagens das Bandeiras */
+section img {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.convertido-name, .converter-name {
+.converter-name, .convertido-name {
     font-size: 14px;
-    color: #777777;
-    text-transform: uppercase;
-    font-weight: 500;
-    margin-top: 4px;
+    color: #94a3b8;
 }
 
 .valor-converter, .valor-convertido {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: bold;
-    color: #555555;
-    text-align: center;
-    margin-top: 2px;
-    width: 100%;
+    color: #f8fafc;
 }
 
 .valor-convertido {
-    color: #16a34a;
+    color: #4ade80; /* Destaca o resultado convertido em verde */
 }
 
+/* Botão de Inverter Moedas ⇄ */
 .invert-button {
-    width: 55px;
-    height: 35px;
-    opacity: 0.5;
-    margin: 10px auto;
-    
+    background-color: #334155;
+    color: #38bdf8;
+    border: 1px solid #475569;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.invert-button:hover {
+    background-color: #38bdf8;
+    color: #0f172a;
+    transform: rotate(180deg); /* Efeito gira 180 graus no hover */
 }

@@ -26,7 +26,7 @@ const updateExchangeRates = async () => {
     currencies.yuan.valorMoeda = Number(data.CNYBRL.bid);
     currencies.libra.valorMoeda = Number(data.GBPBRL.bid);
     currencies.iene.valorMoeda = Number(data.JPYBRL.bid);
-
+    
     console.log(`[${new Date().toLocaleTimeString()}] Preços atualizados via API de mercado.`);
   } catch (error) {
     console.error('Erro ao buscar as taxas de câmbio:', error);

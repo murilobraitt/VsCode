@@ -54,7 +54,7 @@ const convertButton = document.querySelector('.convert-button')
 const currencyFromSelect = document.querySelector('.currency-to-select')
 const currencyToSelect = document.querySelector('.currency-select')
 
-const convertValues = async (showAlert = true) => {
+window.convertValues = async (showAlert = true) => {
 const rawValue = document.querySelector('.input-convertor').value
 const inputConvertorValue = Number(rawValue)
 
