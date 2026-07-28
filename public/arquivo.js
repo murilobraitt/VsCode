@@ -38,7 +38,7 @@
       valorMoeda: 0,
       locale: 'en-GB',
       currency: 'GBP',
-      name: 'Libra Estrelina',
+      name: 'Libra Esterlina',
       image: 'https://static.vecteezy.com/ti/vetor-gratis/p1/5720180-libra-icone-moeda-britanica-simbolo-ilustracao-moeda-simbolo-gratis-vetor.jpg'
   },
   iene: {
