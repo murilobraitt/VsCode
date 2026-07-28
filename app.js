@@ -7,29 +7,32 @@ app.use(express.static('public'));
 
 const currencies = {
   real: { valorMoeda: 1, locale: 'pt-BR', currency: 'BRL', name: 'Real Brasileiro' },
-  dolar: { valorMoeda: 0, locale: 'en-US', currency: 'USD', name: 'Dólar Americano' },
-  euro: { valorMoeda: 0, locale: 'de-DE', currency: 'EUR', name: 'Euro' },
-  bitcoin: { valorMoeda: 0, locale: 'en-US', currency: 'BTC', name: 'Bitcoin' },
-  yuan: { valorMoeda: 0, locale: 'zh-CN', currency: 'CNY', name: 'Yuan' },
-  libra: { valorMoeda: 0, locale: 'en-GB', currency: 'GBP', name: 'Libra Esterlina' },
-  iene: { valorMoeda: 0, locale: 'ja-JP', currency: 'JPY', name: 'Iene Japonês' }
+  dolar: { valorMoeda: 5.80, locale: 'en-US', currency: 'USD', name: 'Dólar Americano' },
+  euro: { valorMoeda: 6.10, locale: 'de-DE', currency: 'EUR', name: 'Euro' },
+  bitcoin: { valorMoeda: 550000, locale: 'en-US', currency: 'BTC', name: 'Bitcoin' },
+  yuan: { valorMoeda: 0.80, locale: 'zh-CN', currency: 'CNY', name: 'Yuan' },
+  libra: { valorMoeda: 7.30, locale: 'en-GB', currency: 'GBP', name: 'Libra Esterlina' },
+  iene: { valorMoeda: 0.038, locale: 'ja-JP', currency: 'JPY', name: 'Iene Japonês' }
 };
 
 const updateExchangeRates = async () => {
   try {
-    const response = await fetch("https://awesomeapi.com.br");
+    const response = await fetch("https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL,CNY-BRL,GBP-BRL,JPY-BRL");
+    
+    if (!response.ok) throw new Error(`Erro na requisição: ${response.status}`);
+
     const data = await response.json();
 
-    currencies.dolar.valorMoeda = Number(data.USD.bid);
-    currencies.euro.valorMoeda = Number(data.EUR.bid);
-    currencies.bitcoin.valorMoeda = Number(data.BTC.bid);
-    currencies.yuan.valorMoeda = Number(data.CNY.bid);
-    currencies.libra.valorMoeda = Number(data.GBP.bid);
-    currencies.iene.valorMoeda = Number(data.JPY.bid);
+    currencies.dolar.valorMoeda = Number(data.USDBRL.bid);
+    currencies.euro.valorMoeda = Number(data.EURBRL.bid);
+    currencies.bitcoin.valorMoeda = Number(data.BTCBRL.bid);
+    currencies.yuan.valorMoeda = Number(data.CNYBRL.bid);
+    currencies.libra.valorMoeda = Number(data.GBPBRL.bid);
+    currencies.iene.valorMoeda = Number(data.JPYBRL.bid);
 
     console.log(`[${new Date().toLocaleTimeString()}] Preços atualizados via API de mercado.`);
   } catch (error) {
-    console.error('Erro ao buscar as taxas de câmbio:', error);
+    console.error('Erro ao buscar as taxas de câmbio (Usando valores padrão):', error);
   }
 };
 
@@ -41,20 +44,12 @@ app.get('/converter', async (req, res) => {
   if (isNaN(inputConvertorValue) || inputConvertorValue <= 0) {
     return res.status(400).json({ erro: 'Por favor, insira um valor válido.' });
   }
-  
-  if (currencies.dolar.valorMoeda === 0) {
-    await updateExchangeRates();
-  }
 
   const fromCurrency = currencies[deMoeda];
   const toCurrency = currencies[paraMoeda];
 
   if (!fromCurrency || !toCurrency) {
     return res.status(400).json({ erro: 'Moeda de origem ou destino inválida.' });
-  }
-
-  if (toCurrency.currency !== 'BRL' && toCurrency.valorMoeda === 0) {
-    return res.status(503).json({ erro: 'As cotações estão sendo carregadas pelo servidor. Aguarde 2 segundos.' });
   }
 
   const valueInReal = fromCurrency.currency === 'BRL' 
@@ -85,7 +80,6 @@ app.get('/converter', async (req, res) => {
 });
 
 updateExchangeRates(); // Atualiza as taxas de câmbio ao iniciar o servidor
-
 setInterval(updateExchangeRates, 60000);
 
 app.listen(porta, () => {
