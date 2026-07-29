@@ -17,21 +17,26 @@ const currencies = {
 
 const updateExchangeRates = async () => {
   try {
-    const MINHA_CHAVE_HG = "2852326"; 
-    const response = await fetch(`https://api.hgbrasil.com/finance?format=json&key=${MINHA_CHAVE_HG}`);
-    
-    if (!response.ok) throw new Error(`Erro na requisição: ${response.status}`);
+    const TOKEN = process.env.TOKEN_AWESOME;
+    if (!TOKEN) {
+       console.warn("AVISO: Variável TOKEN_AWESOME não configurada no Render. Usando cota grátis aberta.")
+    }
+    const url = TOKEN
+    ? `https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL,CNY-BRL,GBP-BRL,JPY-BRL?token=${TOKEN}`
+    : "https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL,CNY-BRL,GBP-BRL,JPY-BRL";
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Erro na requisição: ${response.statusText}`);
+  
 
     const data = await response.json();
 
-    const moedas = data.results.currencies;
-
-    currencies.dolar.valorMoeda = Number(moedas.USD.buy);
-    currencies.euro.valorMoeda = Number(moedas.EUR.buy);
-    currencies.bitcoin.valorMoeda = Number(moedas.BTC.buy);
-    currencies.yuan.valorMoeda = Number(moedas.CNY.buy);
-    currencies.libra.valorMoeda = Number(moedas.GBP.buy);
-    currencies.iene.valorMoeda = Number(moedas.JPY.buy);
+    currencies.dolar.valorMoeda = Number(data.USDBRL.bid);
+    currencies.euro.valorMoeda = Number(data.EURBRL.bid);
+    currencies.bitcoin.valorMoeda = Number(data.BTCBRL.bid);
+    currencies.yuan.valorMoeda = Number(data.CNYBRL.bid);
+    currencies.libra.valorMoeda = Number(data.GBPBRL.bid);
+    currencies.iene.valorMoeda = Number(data.JPYBRL.bid);
 
     console.log(`[${new Date().toLocaleTimeString()}] Preços atualizados via API de mercado.`);
   } catch (error) {
@@ -82,8 +87,9 @@ app.get('/converter', async (req, res) => {
   });
 });
 
-updateExchangeRates(); // Atualiza as taxas de câmbio ao iniciar o servidor
-setInterval(updateExchangeRates, 360000);
+updateExchangeRates(); 
+// Atualiza as taxas de câmbio ao iniciar o servidor
+setInterval(updateExchangeRates, 60000);
 
 app.listen(porta, () => {
   console.log(`Servidor de conversão rodando em http://localhost:${porta}`);
