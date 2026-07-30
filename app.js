@@ -87,6 +87,54 @@ app.get('/converter', async (req, res) => {
   });
 });
 
+app.get('/historico', async (req, res) => {
+  const moedaSelecionada = req.query.moeda || 'dolar';
+  
+  const codigosMoedas = {
+    dolar: 'USD',
+    euro: 'EUR',
+    bitcoin: 'BTC',
+    yuan: 'CNY',
+    libra: 'GBP',
+    iene: 'JPY'
+  };
+
+  const codigo = codigosMoedas[moedaSelecionada];
+
+  if (!codigo || moedaSelecionada === 'real') {
+    return res.json({ erro: 'Não há dados históricos para a moeda selecionada.' });
+  }
+
+  try {
+    const TOKEN = process.env.TOKEN_AWESOME;
+    const url = TOKEN
+      ? `https://economia.awesomeapi.com.br/json/daily/${codigo}-BRL/7?token=${TOKEN}`
+      : `https://economia.awesomeapi.com.br/json/daily/${codigo}-BRL/7`;
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Erro na API de histórico: ${response.status}`);
+
+    const data = await response.json();
+    const historicoOrdenado = data.reverse();
+
+    const dadosGrafico = historicoOrdenado.map(item => {
+      const dataOriginal = new Date(item.timestamp * 1000);
+      const dia = String(dataOriginal.getDate()).padStart(2, '0');
+      const mes = String(dataOriginal.getMonth() + 1).padStart(2, '0');
+      
+      return {
+        data: `${dia}/${mes}`,
+        preco: Number(item.bid)
+      };
+    });
+
+    res.json(dadosGrafico);
+  } catch (error) {
+    console.error('Erro ao buscar histórico do mercado:', error.message);
+    res.status(500).json({ erro: 'Erro ao carregar os dados do gráfico.' });
+  }
+});
+
 updateExchangeRates(); 
 // Atualiza as taxas de câmbio ao iniciar o servidor
 setInterval(updateExchangeRates, 60000);

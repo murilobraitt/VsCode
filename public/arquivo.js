@@ -54,6 +54,8 @@ const convertButton = document.querySelector('.convert-button')
 const currencyFromSelect = document.querySelector('.currency-to-select')
 const currencyToSelect = document.querySelector('.currency-select')
 
+let meuGraficoInstancia = null;
+
 window.convertValues = async (showAlert = true) => {
 const rawValue = document.querySelector('.input-convertor').value
 const inputConvertorValue = Number(rawValue)
@@ -83,6 +85,72 @@ document.querySelector('.valor-convertido').innerHTML = data.resultado
   }
 }
 
+async function atualizarGrafico() {
+  // O gráfico vai mostrar a tendência da moeda que NÃO for o Real.
+  // Se "De" for Real, olhamos a tendência do "Para". Se "De" for estrangeira, olhamos a tendência dela.
+  const moedaParaHistorico = currencyFromSelect.value === 'real' ? currencyToSelect.value : currencyFromSelect.value;
+  const container = document.querySelector('.grafico-container');
+
+  // Se as duas moedas selecionadas forem Real, ocultamos a caixinha do gráfico por lógica
+  if (currencyFromSelect.value === 'real' && currencyToSelect.value === 'real') {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'flex';
+
+  try {
+    const response = await fetch(`/historico?moeda=${moedaParaHistorico}`);
+    const dados = await response.json();
+
+    if (dados.erro) {
+      console.warn(dados.erro);
+      return;
+    }
+
+    // Mapeia e divide os dados em rótulos (datas) e valores (preços) exigidos pelo Chart.js [Docs]
+    const rotulosDatas = dados.map(item => item.data);
+    const valoresPrecos = dados.map(item => item.preco);
+
+    const ctx = document.getElementById('canvasGrafico').getContext('2d');
+
+    // REGRA DO CHART.JS: Se o gráfico já existir na tela, precisamos destruí-lo antes de criar o novo [Docs]
+    if (meuGraficoInstancia) {
+      meuGraficoInstancia.destroy();
+    }
+
+    // Configuração oficial de design do Chart.js combinando perfeitamente com seu CSS [Docs]
+    meuGraficoInstancia = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: rotulosDatas,
+        datasets: [{
+          label: `Preço em Real (${currencies[moedaParaHistorico].currency})`,
+          data: valoresPrecos,
+          borderColor: '#38bdf8', // Azul claro brilhante igual seus destaques do CSS
+          backgroundColor: 'rgba(56, 189, 248, 0.1)', // Sombra azul transparente abaixo da linha
+          borderWidth: 3,
+          tension: 0.3, // Deixa a linha do gráfico curvada e elegante
+          pointBackgroundColor: '#4ade80', // Pontos em verde igual seu resultado convertido
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false } // Oculta legenda para economizar espaço no card
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
+          y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('Erro ao renderizar gráfico:', error);
+  }
+}
+
 function changeCurrency() {
     const fromCurrency = currencies[currencyFromSelect.value]
     const toCurrency = currencies[currencyToSelect.value]
@@ -98,6 +166,7 @@ function changeCurrency() {
     }
 
     convertValues(false)
+    atualizarGrafico()
 }
 
 currencyFromSelect.addEventListener('change', changeCurrency)
@@ -118,4 +187,5 @@ setInterval(async () => {
   if (rawValue && Number(rawValue) > 0) {
     convertValues(false);
   }
+  atualizarGrafico();
 }, 60000)

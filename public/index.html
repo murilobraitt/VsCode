@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="project.css">
+    <script src ="https://unpkg.com/chart.js@4.4.1/dist/chart.umd.js"></script>
     <title>Conversão de Moedas</title>
 </head>
 
@@ -61,6 +62,11 @@
                 <p class="valor-convertido">US$ 0.0</p>
             </div>
         </section>
+
+        <div class="grafico-container">
+            <h3 class="grafico-titulo">Tendência nos últimos 7 dias</h3>
+            <canvas id="canvasGrafico"></canvas>
+        </div>
     </main>
 
     <script src="./arquivo.js"></script>
