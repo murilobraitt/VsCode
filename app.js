@@ -60,6 +60,41 @@ app.get('/converter', async (req, res) => {
     return res.status(400).json({ erro: 'Moeda de origem ou destino inválida.' });
   }
 
+   try {
+    const TOKEN = process.env.TOKEN_AWESOME;
+    const url = TOKEN
+      ? `https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL,CNY-BRL,GBP-BRL,JPY-BRL?token=${TOKEN}`
+      : "https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL,CNY-BRL,GBP-BRL,JPY-BRL";
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+    const data = await response.json();
+
+    // Sincroniza os dados da memória com os valores mais recentes obtidos
+    currencies.dolar.valorMoeda = Number(data.USDBRL.bid);
+    currencies.euro.valorMoeda = Number(data.EURBRL.bid);
+    currencies.bitcoin.valorMoeda = Number(data.BTCBRL.bid);
+    currencies.yuan.valorMoeda = Number(data.CNYBRL.bid);
+    currencies.libra.valorMoeda = Number(data.GBPBRL.bid);
+    currencies.iene.valorMoeda = Number(data.JPYBRL.bid);
+
+    // Mapeamento lógico para identificar a moeda estrangeira ativa na operação
+    const moedaEstrangeira = deMoeda === 'real' ? paraMoeda : deMoeda;
+    const codigos = { dolar: 'USD', euro: 'EUR', bitcoin: 'BTC', yuan: 'CNY', libra: 'GBP', iene: 'JPY' };
+    const codigoMoeda = codigos[moedaEstrangeira];
+
+    // Extrai o percentual de variação ('pctChange') do objeto retornado pela API [Docs]
+    let porcentagemVariacao = 0;
+    if (codigoMoeda && data[`${codigoMoeda}BRL`]) {
+      porcentagemVariacao = Number(data[`${codigoMoeda}BRL`].pctChange);
+      
+      // Ajuste matemático: se a moeda de origem não for real, invertemos o sinal da tendência
+      if (deMoeda !== 'real') {
+        porcentagemVariacao = -porcentagemVariacao;
+      }
+    }
+  
+
   const valueInReal = fromCurrency.currency === 'BRL' 
     ? inputConvertorValue 
     : inputConvertorValue * fromCurrency.valorMoeda;
@@ -83,12 +118,19 @@ app.get('/converter', async (req, res) => {
 
   res.json({
     valorOriginal: valorOriginalFormatado,
-    resultado: valorConvertidoFormatado
+    resultado: valorConvertidoFormatado,
+    variacao: porcentagemVariacao
   });
+
+  } catch (error) {
+    console.error('Erro na rota de conversão com variação:', error.message);
+    res.status(500).json({ erro: 'Erro ao processar a conversão com cotação do mercado.' });
+  }
 });
 
 app.get('/historico', async (req, res) => {
   const moedaSelecionada = req.query.moeda || 'dolar';
+  const diasSugeridos = req.query.dias || '7';
   
   const codigosMoedas = {
     dolar: 'USD',
@@ -108,8 +150,8 @@ app.get('/historico', async (req, res) => {
   try {
     const TOKEN = process.env.TOKEN_AWESOME;
     const url = TOKEN
-      ? `https://economia.awesomeapi.com.br/json/daily/${codigo}-BRL/7?token=${TOKEN}`
-      : `https://economia.awesomeapi.com.br/json/daily/${codigo}-BRL/7`;
+      ? `https://economia.awesomeapi.com.br/json/daily/${codigo}-BRL/${diasSugeridos}?token=${TOKEN}`
+      : `https://economia.awesomeapi.com.br/json/daily/${codigo}-BRL/${diasSugeridos}`;
 
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Erro na API de histórico: ${response.status}`);

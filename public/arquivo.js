@@ -53,8 +53,10 @@
 const convertButton = document.querySelector('.convert-button')
 const currencyFromSelect = document.querySelector('.currency-to-select')
 const currencyToSelect = document.querySelector('.currency-select')
+const elementoVariacao = document.querySelector('.moeda-variacao')
 
 let meuGraficoInstancia = null;
+let periodoSelecionado = '7'
 
 window.convertValues = async (showAlert = true) => {
 const rawValue = document.querySelector('.input-convertor').value
@@ -80,6 +82,30 @@ if (isNaN(inputConvertorValue) || inputConvertorValue <= 0) {
 document.querySelector('.valor-converter').innerHTML = data.valorOriginal
 document.querySelector('.valor-convertido').innerHTML = data.resultado
 
+    // 🛠️ SEÇÃO INSTALADA: Lógica para exibir a variação com setas e cores dinâmicas
+    if (deMoeda === 'real' && paraMoeda === 'real') {
+      elementoVariacao.innerHTML = ''; // Se for Real para Real, esvazia o texto
+    } else {
+      const varNumero = Number(data.variacao);
+      const varFormatada = varNumero.toFixed(2) + '%';
+
+      // Reseta as classes antigas para não misturar verde com vermelho
+      elementoVariacao.classList.remove('alta', 'baixa');
+
+      if (varNumero > 0) {
+        // Se subiu: coloca a seta para cima e pinta de verde (classe alta)
+        elementoVariacao.innerHTML = `▲ +${varFormatada} hoje`;
+        elementoVariacao.classList.add('alta');
+      } else if (varNumero < 0) {
+        // Se caiu: coloca a seta para baixo e pinta de vermelho (classe baixa)
+        elementoVariacao.innerHTML = `▼ ${varFormatada} hoje`;
+        elementoVariacao.classList.add('baixa');
+      } else {
+        // Se ficou exatamente estável (0%)
+        elementoVariacao.innerHTML = `0.00% hoje`;
+      }
+    }
+
   } catch (error) {
     console.error('Erro ao conectar com o servidor local:', error);
   }
@@ -99,7 +125,7 @@ async function atualizarGrafico() {
   container.style.display = 'flex';
 
   try {
-    const response = await fetch(`/historico?moeda=${moedaParaHistorico}`);
+    const response = await fetch(`/historico?moeda=${moedaParaHistorico}&dias=${periodoSelecionado}`);
     const dados = await response.json();
 
     if (dados.erro) {
@@ -178,6 +204,21 @@ invertButton.addEventListener('click', () => {
   currencyFromSelect.value = currencyToSelect.value;
   currencyToSelect.value = tempValue;
   changeCurrency();
+});
+
+// 3. INSTALADO: Gerenciador de cliques nos botões de período (7D, 15D, 30D, 60D)
+document.querySelectorAll('.periodo-btn').forEach(botao => {
+  botao.addEventListener('click', (evento) => {
+    // Remove a classe 'active' do botão antigo
+    document.querySelectorAll('.periodo-btn').forEach(btn => btn.classList.remove('active'));
+    
+    // Adiciona a classe 'active' no botão que acabou de ser clicado
+    evento.target.classList.add('active');
+    
+    // Captura o número do atributo data-dias e atualiza o gráfico
+    periodoSelecionado = evento.target.getAttribute('data-dias');
+    atualizarGrafico();
+  });
 });
 
 changeCurrency()

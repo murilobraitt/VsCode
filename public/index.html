@@ -60,11 +60,22 @@
                 <img class="imagem" src="https://thumbs.dreamstime.com/b/bandeira-do-estados-unidos-da-am%C3%A9rica-%C3%ADcone-lustroso-vetor-crach%C3%A1-americano-isolado-132659192.jpg" alt="logo-moeda-convertida">
                 <p class="convertido-name">Dólar Americano</p>
                 <p class="valor-convertido">US$ 0.0</p>
+
+                <p class="moeda-variacao"></p>
             </div>
         </section>
 
         <div class="grafico-container">
-            <h3 class="grafico-titulo">Tendência nos últimos 7 dias</h3>
+            <h3 class="grafico-titulo">Tendência do Mercado</h3>
+
+            <div class="botoes-periodo">
+
+            <button class="periodo-btn active" data-dias="7">7D</button>
+            <button class="periodo-btn" data-dias="15">15D</button>
+            <button class="periodo-btn" data-dias="30">30D</button>
+            <button class="periodo-btn" data-dias="60">60D</button>
+            </div>
+
             <canvas id="canvasGrafico"></canvas>
         </div>
     </main>

@@ -164,3 +164,66 @@ canvas {
     width: 100% !important;
     height: auto !important;
 }
+
+.botoes-periodo {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+/* Estilo base de cada botão */
+.periodo-btn {
+    background-color: #334155; /* Fundo cinza azulado combinando com seus inputs */
+    border: 1px solid #475569;
+    color: #94a3b8; /* Texto cinza claro secundário */
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+    /* EFEITO 1: Transição suave. Quando o botão mudar de cor ou borda, ele não pisca, ele desliza em 0.2 segundos */
+    transition: all 0.2s ease-in-out;
+}
+
+/* EFEITO 2: Efeito Hover (Passar o mouse ou o dedo por cima) */
+.periodo-btn:hover {
+    background-color: #475569; /* Fundo clareia um pouco */
+    color: #f8fafc; /* Texto fica totalmente branco */
+    border-color: #64748b;
+}
+
+/* EFEITO 3: Efeito Active do clique (Efeito de botão afundando de leve ao pressionar) */
+.periodo-btn:active {
+    transform: scale(0.95);
+}
+
+/* EFEITO 4: O Botão Selecionado (Garante o brilho azul no botão ativo no momento) */
+.periodo-btn.active {
+    background-color: rgba(56, 189, 248, 0.15); /* Fundo azul transparente */
+    border-color: #38bdf8; /* Borda brilha no azul claro igual seus labels */
+    color: #38bdf8; /* Texto em azul claro */
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); /* Sombra de neon azul bem suave ao redor */
+}
+
+/* Estilo base da variação do dia */
+.moeda-variacao {
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: -2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Classe dinâmica: Se a moeda subiu hoje (Verde) */
+.moeda-variacao.alta {
+    color: #4ade80; /* Mesmo verde brilhante do seu resultado */
+}
+
+/* Classe dinâmica: Se a moeda desceu hoje (Vermelho) */
+.moeda-variacao.baixa {
+    color: #f87171; /* Vermelho pastel elegante para o tema escuro */
+}
