@@ -227,3 +227,11 @@ canvas {
 .moeda-variacao.baixa {
     color: #f87171; /* Vermelho pastel elegante para o tema escuro */
 }
+
+.moeda-limites {
+    font-size: 11px;
+    color: #64748b; /* Cinza claro */
+    font-weight: 500;
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+}

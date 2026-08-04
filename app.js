@@ -85,12 +85,21 @@ app.get('/converter', async (req, res) => {
 
     // Extrai o percentual de variação ('pctChange') do objeto retornado pela API [Docs]
     let porcentagemVariacao = 0;
+    let maximaHoje= 0;
+    let minimaHoje= 0;
+    
     if (codigoMoeda && data[`${codigoMoeda}BRL`]) {
       porcentagemVariacao = Number(data[`${codigoMoeda}BRL`].pctChange);
-      
+
+      maximaHoje = Number(data[`${codigoMoeda}BRL`].high);
+      minimaHoje = Number(data[`${codigoMoeda}BRL`].low);
+
       // Ajuste matemático: se a moeda de origem não for real, invertemos o sinal da tendência
       if (deMoeda !== 'real') {
         porcentagemVariacao = -porcentagemVariacao;
+
+        maximaHoje = 1 / Number(data[`${codigoMoeda}BRL`].low);
+        minimaHoje = 1 / Number(data[`${codigoMoeda}BRL`].high);
       }
     }
   
@@ -119,7 +128,9 @@ app.get('/converter', async (req, res) => {
   res.json({
     valorOriginal: valorOriginalFormatado,
     resultado: valorConvertidoFormatado,
-    variacao: porcentagemVariacao
+    variacao: porcentagemVariacao,
+    maxima: maximaHoje,
+    minima: minimaHoje
   });
 
   } catch (error) {

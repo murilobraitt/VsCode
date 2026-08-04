@@ -54,6 +54,7 @@ const convertButton = document.querySelector('.convert-button')
 const currencyFromSelect = document.querySelector('.currency-to-select')
 const currencyToSelect = document.querySelector('.currency-select')
 const elementoVariacao = document.querySelector('.moeda-variacao')
+const elementoLimites = document.querySelector('.moeda-limites')
 
 let meuGraficoInstancia = null;
 let periodoSelecionado = '7'
@@ -104,8 +105,21 @@ document.querySelector('.valor-convertido').innerHTML = data.resultado
         // Se ficou exatamente estável (0%)
         elementoVariacao.innerHTML = `0.00% hoje`;
       }
-    }
+       if (elementoLimites) {
+        const moedaAlvo = deMoeda === 'real' ? paraMoeda : deMoeda;
+        const confMoeda = currencies[moedaAlvo];
+        
+        // Determina quantas casas decimais usar (Bitcoin precisa de mais casas)
+        const casasDecimais = confMoeda.currency === 'BTC' ? 4 : 2;
+        const maximoText = Number(data.maxima).toFixed(casasDecimais);
+        const minimoText = Number(data.minima).toFixed(casasDecimais);
 
+        // Se a moeda de destino for Real, exibe o símbolo R$. Caso contrário, exibe o símbolo da moeda estrangeira
+        const simboloExibicao = paraMoeda === 'real' ? 'R$' : (confMoeda.currency === 'USD' ? 'US$' : (confMoeda.currency === 'EUR' ? '€' : ''));
+
+        elementoLimites.innerHTML = `Mín: ${simboloExibicao} ${minimoText} | Máx: ${simboloExibicao} ${maximoText}`;
+      }
+    }
   } catch (error) {
     console.error('Erro ao conectar com o servidor local:', error);
   }
