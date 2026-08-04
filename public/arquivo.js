@@ -7,42 +7,36 @@
        image: 'https://img.freepik.com/vetores-premium/brasil-como-um-icone-brilhante-redondo_1222108-165.jpg?semt=ais_hybrid&w=740&q=80'
   },
     dolar: { 
-      valorMoeda: 0,
       locale: 'en-US',
       currency: 'USD',
       name: 'Dólar Americano',
       image: 'https://thumbs.dreamstime.com/b/bandeira-do-estados-unidos-da-am%C3%A9rica-%C3%ADcone-lustroso-vetor-crach%C3%A1-americano-isolado-132659192.jpg'
   },
     euro: {
-      valorMoeda: 0,
       locale: 'de-DE',
       currency: 'EUR',
       name: 'Euro',
       image: 'https://png.pngtree.com/png-clipart/20190614/original/pngtree-euro-icon-png-image_3700417.jpg'
   },
     bitcoin: {
-      valorMoeda: 0,
       locale: 'en-US',
       currency: 'BTC',
       name: 'Bitcoin',
       image: 'https://www.shutterstock.com/image-vector/bitcoin-orange-logo-icon-circle-600nw-2529375087.jpg'
   },
     yuan: {
-      valorMoeda: 0,
       locale: 'zh-CN',
       currency: 'CNY',
       name: 'Yuan',
       image: 'https://static.vecteezy.com/ti/vetor-gratis/p1/14337198-simbolo-de-yuan-chines-vetor.jpg'
   },
     libra: {
-      valorMoeda: 0,
       locale: 'en-GB',
       currency: 'GBP',
       name: 'Libra Esterlina',
       image: 'https://static.vecteezy.com/ti/vetor-gratis/p1/5720180-libra-icone-moeda-britanica-simbolo-ilustracao-moeda-simbolo-gratis-vetor.jpg'
   },
   iene: {
-      valorMoeda: 0,
       locale: 'ja-JP',
       currency: 'JPY',
       name: 'Iene Japonês',
