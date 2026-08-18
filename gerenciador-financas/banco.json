@@ -1,0 +1,46 @@
+{
+  "transacoes": [
+    {
+      "descricao": "Salário",
+      "valor": 3000,
+      "tipo": "entrada",
+      "categoria": "Salario"
+    },
+    {
+      "descricao": "Mercado",
+      "valor": 200,
+      "tipo": "saida",
+      "categoria": "Alimentacao"
+    },
+    {
+      "descricao": "Aluguel Atrasado",
+      "valor": 4000,
+      "tipo": "saida",
+      "categoria": "outros"
+    },
+    {
+      "descricao": "almoço",
+      "valor": 50,
+      "tipo": "saida",
+      "categoria": "Alimentacao"
+    },
+    {
+      "descricao": "supermercado semanal",
+      "valor": 149.98,
+      "tipo": "saida",
+      "categoria": "Alimentacao"
+    },
+    {
+      "descricao": "Compra de R$50 na feira! 🍉🛒",
+      "valor": 50,
+      "tipo": "saida",
+      "categoria": "outros"
+    },
+    {
+      "descricao": "salario",
+      "valor": 3000,
+      "tipo": "entrada",
+      "categoria": "Salario"
+    }
+  ]
+}

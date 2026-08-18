@@ -1,0 +1,214 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #0f172a; /* Azul escuro idêntico ao conversor */
+    color: #f8fafc;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Permite rolar a tela para baixo caso fique grande */
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+/* 2. CAIXA CONTAINER PRINCIPAL */
+main {
+    background-color: #1e293b; /* Cor do card principal */
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 800px; /* Mais largo para acomodar o gráfico e a lista lado a lado */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* 3. DESIGN DO PAINEL DE SALDOS (TRÊS CARTÕES LADO A LADO) */
+.painel-saldos {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Estilo comum para os três cartões */
+.cartao-entrada, .cartao-saida, .cartao-saldo {
+    background-color: #0f172a;
+    padding: 20px;
+    border-radius: 12px;
+    flex: 1; /* Faz os três cartões dividirem o espaço igualmente */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.painel-saldos h3 {
+    font-size: 14px;
+    color: #94a3b8; /* Cor cinza secundária discreta */
+    font-weight: 500;
+}
+
+.painel-saldos p {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Cores específicas de destaque para cada tipo de saldo [Docs] */
+.valor-entrada {
+    color: #4ade80; /* Verde brilhante para lucros */
+}
+
+.valor-saida {
+    color: #f87171; /* Vermelho pastel para gastos */
+}
+
+.valor-saldo {
+    color: #38bdf8; /* Azul claro para o saldo atual líquido */
+}
+
+.formulario-gasto {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #0f172a;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.formulario-gasto h2 {
+    font-size: 18px;
+    color: #38bdf8; /* Título em azul claro brilhante */
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Estilização dos textos das etiquetas (Labels) */
+.formulario-gasto label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+/* Inputs e Selects estilizados e padronizados */
+.formulario-gasto input, .formulario-gasto select {
+    background-color: #334155;
+    border: 1px solid #475569;
+    color: #f8fafc;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+/* Efeito de foco quando o usuário clica no campo */
+.formulario-gasto input:focus, .formulario-gasto select:focus {
+    border-color: #38bdf8; /* Borda brilha em azul claro */
+}
+
+/* Botão de Adicionar Transação com degradê */
+.botao-adicionar {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.1s, background 0.2s;
+}
+
+.botao-adicionar:hover {
+    background: linear-gradient(135deg, #0369a1, #075985);
+}
+
+.botao-adicionar:active {
+    transform: scale(0.98); /* Efeito de clique afundando */
+}
+
+.conteudo-inferior {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Estilo para as duas caixas inferiores (Lista e Gráfico) */
+.historico-container, .grafico-financas-container {
+    background-color: #0f172a;
+    padding: 20px;
+    border-radius: 12px;
+    flex: 1; /* Divide o espaço meio a meio entre os dois */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.conteudo-inferior h2 {
+    font-size: 16px;
+    color: #38bdf8;
+    font-weight: bold;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 8px;
+}
+
+/* Estilo para a lista UL do histórico */
+.lista-transacoes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 250px; /* Limita a altura para criar uma barra de rolagem se tiver muitos gastos */
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Estilo para cada item de gasto/ganho da lista (LI) */
+.lista-transacoes li {
+    background-color: #1e293b;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    border-left: 4px solid #334155; /* Bordinha lateral neutra */
+}
+
+/* Classes dinâmicas que o JavaScript vai usar para pintar a bordinha do item */
+.lista-transacoes li.item-entrada {
+    border-left-color: #4ade80; /* Borda verde se for ganho */
+}
+
+.lista-transacoes li.item-saida {
+    border-left-color: #f87171; /* Borda vermelha se for gasto */
+}
+
+/* Garante que o canvas do gráfico de pizza não estoure o tamanho do card [Docs] */
+.grafico-financas-container canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 200px;
+}
+
+/* 6. RESPONSIVIDADE (PARA O SITE FICAR LINDO NO CELULAR) [Docs] */
+@media (max-width: 600px) {
+    .painel-saldos {
+        flex-direction: column; /* Cartões de saldo ficam um embaixo do outro no celular */
+    }
+    .conteudo-inferior {
+        flex-direction: column; /* Histórico e Gráfico ficam um embaixo do outro no celular */
+    }
+}

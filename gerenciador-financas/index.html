@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="project.css">
+    <script src ="https://unpkg.com/chart.js@4.4.1/dist/chart.umd.js"></script>
+    <title>Gerenciador de Finanças</title>
+</head>
+<body>
+    <main>
+        <section class="painel-saldos">
+            <div class="cartao-entrada">
+                <h3>Entradas</h3>
+                <p class="valor-entrada">R$ 0,00</p>
+            </div>
+
+            <div class="cartao-saida">
+                <h3>Saídas</h3>
+                <p class="valor-saida">R$ 0,00</p>
+            </div>
+
+            <div class="cartao-saldo">
+                <h3>Saldo Atual</h3>
+                <p class="valor-saldo">R$ 0,00</p>
+            </div>
+        </section>
+        <section class="formulario-gasto">
+            <h2>Nova Transação</h2>
+
+            <label>
+                Descrição
+                <input type="text" class="input-descricao" placeholder="Digite a descrição">
+            </label>
+
+            <label>
+                Valor (R$)
+                <input type="number" class="input-valor" min="0" step="0.01" placeholder="0,00">
+            </label>
+
+            <label>
+                Tipo
+                <select class="select-tipo">
+                    <option value="entrada">Entrada</option>
+                    <option value="saida">Saída</option>
+                </select>
+            </label>
+
+            <label>
+                Categoria
+                <select class="select-categoria">
+                    <option value="Alimentacao">Alimentação</option>
+                    <option value="Lazer">Lazer</option>
+                    <option value="Salario">Salário</option>
+                    <option value="Transporte">Transporte</option>
+                    <option value="outros">Outros</option>
+                </select>
+            </label>
+
+            <button class="botao-adicionar">Adicionar Transação</button>
+        </section>
+        
+        <section class="conteudo-inferior">
+            
+            <div class="historico-container">
+                <h2>Histórico</h2>
+                <ul class="lista-transacoes">
+                </ul>
+            </div>
+
+            <div class="grafico-financas-container">
+                <h2>Gastos por Categoria</h2>
+                <canvas id="graficoPizza"></canvas>
+            </div>
+        </section>
+    </main>
+<script src="arquivo.js"></script>
+</body>
