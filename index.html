@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="projeto.css">
+    <title>Calculadora</title>
+</head>
+<body>
+    <div>
+        <input class="input"/>
+
+        <button class="button-clear" onclick="apagarUltimoNumero()">⌫</button>
+        <button class="button-clear" onclick="limparTela()">AC</button>
+        <button class="button-clear"  onclick="adicionaCaracter('%')">%</button>
+        <button class="button-orange" onclick="adicionaCaracter('/')">/</button>
+
+        <button class="button-number" onclick="adicionaCaracter('7')">7</button>
+        <button class="button-number" onclick="adicionaCaracter('8')">8</button>
+        <button class="button-number" onclick="adicionaCaracter('9')">9</button>
+        <button class="button-orange" onclick="adicionaCaracter('*')">*</button>
+
+        <button class="button-number" onclick="adicionaCaracter('4')">4</button>
+        <button class="button-number" onclick="adicionaCaracter('5')">5</button>
+        <button class="button-number" onclick="adicionaCaracter('6')">6</button>
+        <button class="button-orange" onclick="adicionaCaracter('-')">-</button>
+
+        <button class="button-number" onclick="adicionaCaracter('1')">1</button>
+        <button class="button-number" onclick="adicionaCaracter('2')">2</button>
+        <button class="button-number" onclick="adicionaCaracter('3')">3</button>
+        <button class="button-orange" onclick="adicionaCaracter('+')">+</button>
+
+        <button class="button-number" onclick="inverte()">+/-</button>
+        <button class="button-number" onclick="adicionaCaracter('0')">0</button>
+        <button class="button-number" onclick="adicionaCaracter(',')">,</button>
+        <button class="equal" onclick="calcular()">=</button>
+    </div>
+</body>
+<script src="./scripts.js"></script>
+</html>
