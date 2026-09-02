@@ -6,13 +6,13 @@ const porta = process.env.PORT || 3000;
 app.use(express.static('public'));
 
 const currencies = {
-  real: { valorMoeda: 1, locale: 'pt-BR', currency: 'BRL', name: 'Real Brasileiro' },
-  dolar: { valorMoeda: 5.80, locale: 'en-US', currency: 'USD', name: 'Dólar Americano' },
-  euro: { valorMoeda: 6.10, locale: 'de-DE', currency: 'EUR', name: 'Euro' },
-  bitcoin: { valorMoeda: 550000, locale: 'en-US', currency: 'BTC', name: 'Bitcoin' },
-  yuan: { valorMoeda: 0.80, locale: 'zh-CN', currency: 'CNY', name: 'Yuan' },
-  libra: { valorMoeda: 7.30, locale: 'en-GB', currency: 'GBP', name: 'Libra Esterlina' },
-  iene: { valorMoeda: 0.038, locale: 'ja-JP', currency: 'JPY', name: 'Iene Japonês' }
+  real: { valorMoeda: 1, locale: 'pt-BR', currency: 'BRL', name: 'Real Brasileiro', pctChange: 0, high: 1, low: 1 },
+  dolar: { valorMoeda: 5.80, locale: 'en-US', currency: 'USD', name: 'Dólar Americano', pctChange: 0, high: 5.80, low: 5.80 },
+  euro: { valorMoeda: 6.10, locale: 'de-DE', currency: 'EUR', name: 'Euro', pctChange: 0, high: 6.10, low: 6.10 },
+  bitcoin: { valorMoeda: 550000, locale: 'en-US', currency: 'BTC', name: 'Bitcoin', pctChange: 0, high: 550000, low: 550000 },
+  yuan: { valorMoeda: 0.80, locale: 'zh-CN', currency: 'CNY', name: 'Yuan', pctChange: 0, high: 0.80, low: 0.80 },
+  libra: { valorMoeda: 7.30, locale: 'en-GB', currency: 'GBP', name: 'Libra Esterlina', pctChange: 0, high: 7.30, low: 7.30 },
+  iene: { valorMoeda: 0.038, locale: 'ja-JP', currency: 'JPY', name: 'Iene Japonês', pctChange: 0, high: 0.038, low: 0.038 }
 };
 
 const updateExchangeRates = async () => {
@@ -28,23 +28,26 @@ const updateExchangeRates = async () => {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Erro na requisição: ${response.statusText}`);
   
-
     const data = await response.json();
 
-    currencies.dolar.valorMoeda = Number(data.USDBRL.bid);
-    currencies.euro.valorMoeda = Number(data.EURBRL.bid);
-    currencies.bitcoin.valorMoeda = Number(data.BTCBRL.bid);
-    currencies.yuan.valorMoeda = Number(data.CNYBRL.bid);
-    currencies.libra.valorMoeda = Number(data.GBPBRL.bid);
-    currencies.iene.valorMoeda = Number(data.JPYBRL.bid);
+    const moedasApi = { dolar: 'USDBRL', euro: 'EURBRL', bitcoin: 'BTCBRL', yuan: 'CNYBRL', libra: 'GBPBRL', iene: 'JPYBRL' }
+
+    for (const [chave, parApi] of Object.entries(moedasApi)) {
+      if (data[parApi]) {
+        currencies[chave].valorMoeda = Number(data[parApi].bid);
+        currencies[chave].pctChange = Number(data[parApi].pctChange);
+        currencies[chave].high = Number(data[parApi].high);
+        currencies[chave].low = Number(data[parApi].low);
+      }
+    }
 
     console.log(`[${new Date().toLocaleTimeString()}] Preços atualizados via API de mercado.`);
   } catch (error) {
-    console.error('Erro ao buscar as taxas de câmbio (Usando valores padrão):', error);
+    console.error('Erro ao buscar as taxas de câmbio (Usando valores anteriores):', error);
   }
 };
 
-app.get('/converter', async (req, res) => {
+app.get('/converter', (req, res) => {
   const inputConvertorValue = Number(req.query.valor);
   const deMoeda = req.query.de || 'real';
   const paraMoeda = req.query.para || 'dolar';
@@ -60,50 +63,7 @@ app.get('/converter', async (req, res) => {
     return res.status(400).json({ erro: 'Moeda de origem ou destino inválida.' });
   }
 
-   try {
-    const TOKEN = process.env.TOKEN_AWESOME;
-    const url = TOKEN
-      ? `https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL,CNY-BRL,GBP-BRL,JPY-BRL?token=${TOKEN}`
-      : "https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL,CNY-BRL,GBP-BRL,JPY-BRL";
-
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
-    const data = await response.json();
-
-    // Sincroniza os dados da memória com os valores mais recentes obtidos
-    currencies.dolar.valorMoeda = Number(data.USDBRL.bid);
-    currencies.euro.valorMoeda = Number(data.EURBRL.bid);
-    currencies.bitcoin.valorMoeda = Number(data.BTCBRL.bid);
-    currencies.yuan.valorMoeda = Number(data.CNYBRL.bid);
-    currencies.libra.valorMoeda = Number(data.GBPBRL.bid);
-    currencies.iene.valorMoeda = Number(data.JPYBRL.bid);
-
-    // Mapeamento lógico para identificar a moeda estrangeira ativa na operação
-    const moedaEstrangeira = deMoeda === 'real' ? paraMoeda : deMoeda;
-    const codigos = { dolar: 'USD', euro: 'EUR', bitcoin: 'BTC', yuan: 'CNY', libra: 'GBP', iene: 'JPY' };
-    const codigoMoeda = codigos[moedaEstrangeira];
-
-    // Extrai o percentual de variação ('pctChange') do objeto retornado pela API [Docs]
-    let porcentagemVariacao = 0;
-    let maximaHoje= 0;
-    let minimaHoje= 0;
-    
-    if (codigoMoeda && data[`${codigoMoeda}BRL`]) {
-      porcentagemVariacao = Number(data[`${codigoMoeda}BRL`].pctChange);
-
-      maximaHoje = Number(data[`${codigoMoeda}BRL`].high);
-      minimaHoje = Number(data[`${codigoMoeda}BRL`].low);
-
-      // Ajuste matemático: se a moeda de origem não for real, invertemos o sinal da tendência
-      if (deMoeda !== 'real') {
-        porcentagemVariacao = -porcentagemVariacao;
-
-        maximaHoje = 1 / Number(data[`${codigoMoeda}BRL`].low);
-        minimaHoje = 1 / Number(data[`${codigoMoeda}BRL`].high);
-      }
-    }
-  
-
+  // --- CÁLCULO DOS VALORES DE CONVERSÃO ---
   const valueInReal = fromCurrency.currency === 'BRL' 
     ? inputConvertorValue 
     : inputConvertorValue * fromCurrency.valorMoeda;
@@ -112,6 +72,26 @@ app.get('/converter', async (req, res) => {
     ? valueInReal 
     : valueInReal / toCurrency.valorMoeda;
 
+  // --- LOGICA DE VARIAÇÃO, MÁXIMA E MÍNIMA ---
+  let porcentagemVariacao = 0;
+  let maximaHoje = 0;
+  let minimaHoje = 0;
+  
+  if (deMoeda === 'real' && paraMoeda !== 'real') {
+    porcentagemVariacao = -toCurrency.pctChange;
+    maximaHoje = 1 / toCurrency.low;
+    minimaHoje = 1 / toCurrency.high;
+  } else if (deMoeda !== 'real' && paraMoeda === 'real') {
+    porcentagemVariacao = fromCurrency.pctChange;
+    maximaHoje = fromCurrency.high;
+    minimaHoje = fromCurrency.low;
+  } else if (deMoeda !== 'real' && paraMoeda !== 'real') {
+    porcentagemVariacao = fromCurrency.pctChange - toCurrency.pctChange;
+    maximaHoje = fromCurrency.valorMoeda / toCurrency.valorMoeda;
+    minimaHoje = fromCurrency.valorMoeda / toCurrency.valorMoeda;
+  }
+
+  // --- FORMATAÇÃO DOS RESULTADOS ---
   const valorOriginalFormatado = new Intl.NumberFormat(fromCurrency.locale, {
     style: 'currency',
     currency: fromCurrency.currency
@@ -125,6 +105,7 @@ app.get('/converter', async (req, res) => {
 
   const valorConvertidoFormatado = new Intl.NumberFormat(toCurrency.locale, formatoOpcoes).format(finalValue);
 
+  // Envia a resposta final estruturada
   res.json({
     valorOriginal: valorOriginalFormatado,
     resultado: valorConvertidoFormatado,
@@ -132,12 +113,7 @@ app.get('/converter', async (req, res) => {
     maxima: maximaHoje,
     minima: minimaHoje
   });
-
-  } catch (error) {
-    console.error('Erro na rota de conversão com variação:', error.message);
-    res.status(500).json({ erro: 'Erro ao processar a conversão com cotação do mercado.' });
-  }
-});
+}); // 💡 Fechamento correto da rota sem o catch órfão
 
 app.get('/historico', async (req, res) => {
   const moedaSelecionada = req.query.moeda || 'dolar';
